@@ -1,0 +1,80 @@
+#!/usr/bin/env ruby
+
+module Rectangle
+  CHARACTERE = "*"
+  BORDER_TOP_LEFT_SPECIAL_CHARACTERE = "/"
+  BORDER_TOP_RIGHT_SPECIAL_CHARACTERE	= "\\"
+  BORDER_BOTTOM_LEFT_SPECIAL_CHARACTERE	= "\\"
+  BORDER_BOTTOM_RIGHT_SPECIAL_CHARACTERE = "/"
+  BORDER_MIDDLE_SPECIAL_CHARACTERE = "*"
+  LINES_TYPES = [:top, :middle, :bottom]
+
+  def self.top_line(x)
+    draw_line(x, CHARACTERE, :top)
+  end
+
+  def self.middle_line(x, y)
+    y = y - 2
+    y.times do
+      puts "\n"
+      draw_line(x, " ", :middle)
+    end
+  end
+
+  def self.bottom_line(x, y)
+    puts "\n"
+    draw_line(x, CHARACTERE, :bottom)
+  end
+
+  def self.draw_line(x, character, line_position)
+    x.times { |x_position| print border_character?(x_position, x) ? set_border_character(x, x_position, line_position) : character }
+  end
+
+  def self.draw(x, y)
+    top_line(x)
+    if y > 1
+      middle_line(x, y)
+      bottom_line(x, y)
+    end
+  end
+
+  private
+
+  def self.set_border_character(line_length, x_position, line_position)
+    if line_position == :middle
+      BORDER_MIDDLE_SPECIAL_CHARACTERE
+    elsif line_position == :top && x_position == 0
+      BORDER_TOP_LEFT_SPECIAL_CHARACTERE
+    elsif line_position == :top && x_position == line_length - 1
+      BORDER_TOP_RIGHT_SPECIAL_CHARACTERE
+    elsif line_position == :bottom && x_position == 0
+      BORDER_BOTTOM_LEFT_SPECIAL_CHARACTERE
+    elsif line_position == :bottom && x_position == line_length - 1
+      BORDER_BOTTOM_RIGHT_SPECIAL_CHARACTERE
+    end
+  end
+
+  def self.border_character?(position, line_length)
+    position == 0 || position == line_length - 1
+  end
+end
+
+x = ARGV[0].to_i
+y	= ARGV[1].to_i
+
+if ARGV.empty? || ARGV.size != 2
+  print "You must enter two valid arguments!"
+  exit
+end
+
+if x < 0 || y < 0
+  print "The arguments must be positive !"
+  exit
+end
+
+if x > 200 && y > 100
+  print "The values are too high !"
+  exit
+end
+
+Rectangle.draw(x.to_i, y.to_i)
